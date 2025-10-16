@@ -283,7 +283,6 @@ if options == 'Vendas':
                 preco_refeicao = 60
         if refeicao != "Sem Refeição":
             quantidade_refeicao = st.session_state.qnt_refeicao
-            preco_refeicao_total = preco_refeicao * quantidade_refeicao
 
         bebida = "Sem Bebida"
         quantidade_bebidas = 0
@@ -332,7 +331,6 @@ if options == 'Vendas':
                 preco_bebidas = 55
         if bebida != "Sem Bebida":
             quantidade_bebidas = st.session_state.qnt_bebidas
-            preco_bebidas_total = preco_bebidas * quantidade_bebidas
 
         guloseima = "Sem Guloseima"
         quantidade_guloseima = 0
@@ -348,9 +346,8 @@ if options == 'Vendas':
             preco_guloseima = 6
         if guloseima != "Sem Guloseima":
             quantidade_guloseima = st.session_state.qnt_guloseimas
-            preco_guloseima_total = preco_guloseima * quantidade_guloseima
 
-        total = preco_bebidas_total + preco_refeicao_total + preco_guloseima_total
+        total = (preco_bebidas * quantidade_bebidas) + (preco_refeicao * quantidade_refeicao) + (preco_guloseima * quantidade_guloseima)
 
         valores_adicionar = [
             [date, refeicao, quantidade_refeicao, preco_refeicao, guloseima, quantidade_guloseima, preco_guloseima, bebida, quantidade_bebidas, preco_bebidas, total]
@@ -421,7 +418,9 @@ if options == 'Estoque':
                 quantidade_estoque = st.session_state.qnt_estoque * 6
             if st.session_state.produto1 == "Palone":
                 quantidade_estoque = st.session_state.qnt_estoque
-            if st.session_state.produto1 == "Queijo" or st.session_state.produto1 == "Rachel":
+            if st.session_state.produto1 == "Rachel":
+                quantidade_estoque = st.session_state.qnt_estoque * 10
+            if st.session_state.produto1 == "Queijo":
                 quantidade_estoque = st.session_state.qnt_estoque * 12
             sheet_estoque_atualizar()
         if st.session_state.produto1 == "Não" and st.session_state.produto2 != 'Não' and st.session_state.produto3 == 'Não':
@@ -470,6 +469,7 @@ if options == 'Estoque':
 if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     
+
 
 
 
