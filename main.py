@@ -208,10 +208,10 @@ if options == 'Vendas':
                 atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
             if "Rachel" in produto_adicionar:
                 atualizar_saida(sheet_estoque, "Rachel", quantidade_refeicao2)
-            if "Ovo" in produto_adicionar:
-                atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
-            if "Queijo" in produto_adicionar:
-                atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
+                if "Ovo" in produto_adicionar:
+                    atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
+                if "Queijo" in produto_adicionar:
+                    atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
 
         # --- Bebidas ---
         if bebida_adicionar in sheet_estoque_bebida.col_values(1):
@@ -283,7 +283,7 @@ if options == 'Vendas':
                 preco_refeicao = 60
         if refeicao != "Sem Refeição":
             quantidade_refeicao = st.session_state.qnt_refeicao
-            preco_refeicao = preco_refeicao * quantidade_refeicao
+            preco_refeicao_total = preco_refeicao * quantidade_refeicao
 
         bebida = "Sem Bebida"
         quantidade_bebidas = 0
@@ -332,7 +332,7 @@ if options == 'Vendas':
                 preco_bebidas = 55
         if bebida != "Sem Bebida":
             quantidade_bebidas = st.session_state.qnt_bebidas
-            preco_bebidas = preco_bebidas * quantidade_bebidas
+            preco_bebidas_total = preco_bebidas * quantidade_bebidas
 
         guloseima = "Sem Guloseima"
         quantidade_guloseima = 0
@@ -348,9 +348,9 @@ if options == 'Vendas':
             preco_guloseima = 6
         if guloseima != "Sem Guloseima":
             quantidade_guloseima = st.session_state.qnt_guloseimas
-            preco_guloseima = preco_guloseima * quantidade_guloseima
+            preco_guloseima_total = preco_guloseima * quantidade_guloseima
 
-        total = preco_bebidas + preco_refeicao + preco_guloseima
+        total = preco_bebidas_total + preco_refeicao_total + preco_guloseima_total
 
         valores_adicionar = [
             [date, refeicao, quantidade_refeicao, preco_refeicao, guloseima, quantidade_guloseima, preco_guloseima, bebida, quantidade_bebidas, preco_bebidas, total]
@@ -470,6 +470,7 @@ if options == 'Estoque':
 if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     
+
 
 
 
