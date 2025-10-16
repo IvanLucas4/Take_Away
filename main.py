@@ -48,7 +48,7 @@ if options == 'Vendas':
         st.session_state.hamburguer = 'Não'
     if 'sandes' not in st.session_state:
         st.session_state.sandes = 'Não'
-    if 'batata_asinhas' not in st.session_state:
+    if 'batata_asinha' not in st.session_state:
         st.session_state.batata_asinha = 'Não'
     if 'refrigerante' not in st.session_state:
         st.session_state.refrigerante = 'Nenhum'
@@ -470,6 +470,7 @@ if options == 'Estoque':
 if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     
+
 
 
 
