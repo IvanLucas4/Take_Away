@@ -162,23 +162,32 @@ if options == 'Vendas':
         pipoca = st.selectbox("Pipocas:", ["Não", "Pipoca"], key="pipoca", on_change=atualizar_pipoca)
     qnt_guloseimas = st.slider("Quantidade", 0, 10, 1, key="qnt_guloseimas")
 
-    def atualizar_saida(sheet, produto_nome, quantidade):
-        produtos = sheet.col_values(1)
+    def atualizar_saida(sheet_rs, produto_nome, quantidade):
+        produtos = sheet_rs.col_values(1)
         quantidade_total = quantidade
-            
-        for i, produto in enumerate(produtos):
-            if produto == produto_nome:
-                linha = i + 1
-                restante = sheet.cell(linha, 5).value  # Coluna E = Restante
-                restante = int(restante) if restante else 0
-
+        linhas_produto = [i+1 for i,p in enumerate(produtos) if p == produto_nome]
+        # se o produto existe
+        if not linhas_produto:
+            return False
+        total_disponivel = 0
+        for linha in linhas_produto:
+            restante = sheet_rs.cell(linha, 5).value  # Coluna E = Restante
+            restante = int(restante) if restante else 0
+            total_disponivel += restante
+        if total_disponivel < quantidade:
+            return False
+        else:
+            for linha in linhas_produto:
+                restante = int(sheet_rs.cell(linha, 5).value or 0)
+                if quantidade_total == 0:
+                    break
                 if restante > 0:
-                    saida_atual = int(sheet.cell(linha, 4).value or 0)  # Coluna D = Saída
+                    saida_atual = int(sheet_rs.cell(linha, 4).value or 0)  # Coluna D = Saída
                     if quantidade_total <= restante:
-                        sheet.update_acell(f"D{linha}", saida_atual + quantidade_total)
-                        break
+                        sheet_rs.update_acell(f"D{linha}", saida_atual + quantidade_total)
+                        return True
                     else:
-                        sheet.update_acell(f"D{linha}", saida_atual + restante)
+                        sheet_rs.update_acell(f"D{linha}", saida_atual + restante)
                         quantidade_total -= restante
 
     def main():
@@ -187,37 +196,44 @@ if options == 'Vendas':
         values_count = len(values)
 
         # Escreve a nova linha (automático, não precisa calcular o range)
-        sheet.append_rows(valores_adicionar, value_input_option="USER_ENTERED")
+        sucesso = True
 
         # --- Hambúrgueres ---
         if "Hambúrguer" in produto_adicionar:
             if "Duplo" in produto_adicionar:
-                atualizar_saida(sheet_estoque, "Hambúrguer", quantidade_refeicao2 * 2)
+                sucesso &= atualizar_saida(sheet_estoque, "Hambúrguer", quantidade_refeicao2 * 2)
             elif "Completo" in produto_adicionar or "Simples" in produto_adicionar:
-                atualizar_saida(sheet_estoque, "Hambúrguer", quantidade_refeicao2)
+                sucesso &= atualizar_saida(sheet_estoque, "Hambúrguer", quantidade_refeicao2)
 
             if any(p in produto_adicionar for p in ["Simples 1 com Ovo", "Simples 2", "Completo", "Duplo"]):
-                atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
+                sucesso &= atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
 
             if any(q in produto_adicionar for q in ["Simples 1 com Queijo", "Completo", "Duplo"]):
-                atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
+                sucesso &= atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
 
         # --- Sandes ---
         elif "Sandes" in produto_adicionar:
             if "Sandes de Ovo" in produto_adicionar:
-                atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
+                sucesso &= atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
             if "Rachel" in produto_adicionar:
-                atualizar_saida(sheet_estoque, "Rachel", quantidade_refeicao2)
+                sucesso &= atualizar_saida(sheet_estoque, "Rachel", quantidade_refeicao2)
                 if "Ovo" in produto_adicionar:
-                    atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
+                    sucesso &= atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
                 if "Queijo" in produto_adicionar:
-                    atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
+                    sucesso &= atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
 
         # --- Bebidas ---
-        if bebida_adicionar in sheet_estoque_bebida.col_values(1):
-            atualizar_saida(sheet_estoque_bebida, bebida_adicionar, quantidade_bebidas2)
+        if bebida_adicionar != "Sem Bebida":
+            sucesso &= atualizar_saida(sheet_estoque_bebida, bebida_adicionar, quantidade_bebidas2)
     
-
+        if not sucesso:
+            st.session_state["mensagem_venda"] = "🚫 Venda Cancelada — Estoque insuficiente para um ou mais produtos"
+            st.session_state["tipo_mensagem"] = "erro"
+        else:
+            # Escreve a nova linha (automático, não precisa calcular o range)
+            sheet.append_rows(valores_adicionar, value_input_option="USER_ENTERED")
+            st.session_state["mensagem_venda"] = "✅ Venda Registrada com Sucesso!"
+            st.session_state["tipo_mensagem"] = "sucesso"
 
 
     def reset_inputs():
@@ -368,6 +384,13 @@ if options == 'Vendas':
         if st.button("Sair"):
             st.session_state.authenticated = False
             st.rerun()
+    if "mensagem_venda" in st.session_state:
+        if st.session_state["tipo_mensagem"] == "sucesso":
+            with container:
+                st.success(st.session_state["mensagem_venda"])
+        elif st.session_state["tipo_mensagem"] == "erro":
+            with container:
+                st.error(st.session_state["mensagem_venda"])
 
 if options == 'Estoque':
     st.title("📦 Gerenciamento de Estoque")
@@ -468,7 +491,9 @@ if options == 'Estoque':
 
 if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
+    st.write("## Em Breve!")
     
+
 
 
 
