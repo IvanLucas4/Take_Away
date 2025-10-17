@@ -301,7 +301,7 @@ if options == 'Vendas':
             quantidade_refeicao = st.session_state.qnt_refeicao
 
         bebida = "Sem Bebida"
-        quantidade_bebidas = 0
+        quantidade_bebida = 0
         preco_bebidas = 0
         if st.session_state.refrigerante != "Nenhum":
             bebida = f"Refresco {st.session_state.refrigerante}"
@@ -496,6 +496,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
