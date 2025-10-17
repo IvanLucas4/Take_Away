@@ -376,9 +376,8 @@ if options == 'Vendas':
         quantidade_refeicao2 = valores_adicionar[0][2]
         quantidade_bebidas2 = valores_adicionar[0][8]
 
-        # main()
-        # reset_inputs()
-        valores_adicionar
+        main()
+        reset_inputs()
 
     container = st.container()
     but1, but2 = st.columns(2)
@@ -497,6 +496,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
