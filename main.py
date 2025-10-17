@@ -356,7 +356,10 @@ if options == 'Vendas':
             preco_guloseima = 20
         if st.session_state.bolacha == "Não" and st.session_state.doce != "Não" and st.session_state.pipoca == "Não":
             guloseima = st.session_state.doce
-            preco_guloseima = 2
+            if st.session_state.doce == "PinPop/Yogueta":
+                preco_guloseima = 5
+            else:
+                preco_guloseima = 2
         if st.session_state.bolacha == "Não" and st.session_state.doce == "Não" and st.session_state.pipoca != "Não":
             guloseima = st.session_state.pipoca
             preco_guloseima = 6
@@ -373,8 +376,9 @@ if options == 'Vendas':
         quantidade_refeicao2 = valores_adicionar[0][2]
         quantidade_bebidas2 = valores_adicionar[0][8]
 
-        main()
-        reset_inputs()
+        # main()
+        # reset_inputs()
+        quantidade_bebidas
 
     container = st.container()
     but1, but2 = st.columns(2)
@@ -493,6 +497,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
