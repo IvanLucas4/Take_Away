@@ -440,8 +440,8 @@ if options == 'Estoque':
         qnt_hamburguer = st.slider("Quantidade", 0, 150, 50, key="qnt_hamburguer")
     else:
         qnt_estoque = st.slider("Quantidade", 0, 20, 1, key="qnt_estoque")
-    st.write("## Estoque Paralelo")
-    produto4 = st.selectbox("Produto:" ["Não", "Batatas", "Palone", "Mayonnaise", "Tomato Sauce", "Óleo"], key='produto4', on_change=atualizar_produto4)
+    st.write("### Estoque Paralelo")
+    produto4 = st.selectbox("Produto:", ["Não", "Batatas", "Palone", "Mayonnaise", "Tomato Sauce", "Óleo"], key='produto4', on_change=atualizar_produto4)
     qnt_estoque2 = st.slider("Quantidade", 0, 10, 1, key="qnt_estoque2")
 
 
@@ -522,6 +522,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
