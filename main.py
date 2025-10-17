@@ -346,7 +346,7 @@ if options == 'Vendas':
             if st.session_state.bebida_lata == "Txilar Lata":
                 preco_bebidas = 55
         if bebida != "Sem Bebida":
-            quantidade_bebidas = st.session_state.qnt_bebidas
+            quantidade_bebida = st.session_state.qnt_bebidas
 
         guloseima = "Sem Guloseima"
         quantidade_guloseima = 0
@@ -366,10 +366,10 @@ if options == 'Vendas':
         if guloseima != "Sem Guloseima":
             quantidade_guloseima = st.session_state.qnt_guloseimas
 
-        total = (preco_bebidas * quantidade_bebidas) + (preco_refeicao * quantidade_refeicao) + (preco_guloseima * quantidade_guloseima)
+        total = (preco_bebidas * quantidade_bebida) + (preco_refeicao * quantidade_refeicao) + (preco_guloseima * quantidade_guloseima)
 
         valores_adicionar = [
-            [date, refeicao, quantidade_refeicao, preco_refeicao, guloseima, quantidade_guloseima, preco_guloseima, bebida, quantidade_bebidas, preco_bebidas, total]
+            [date, refeicao, quantidade_refeicao, preco_refeicao, guloseima, quantidade_guloseima, preco_guloseima, bebida, quantidade_bebida, preco_bebidas, total]
         ]
         bebida_adicionar = valores_adicionar[0][7]
         produto_adicionar = valores_adicionar[0][1]
@@ -496,6 +496,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
