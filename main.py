@@ -32,9 +32,10 @@ def carregar_planilhas():
     sheet = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Vendas")
     sheet_estoque = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque")
     sheet_estoque_bebida = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque_Bebidas")
-    return sheet, sheet_estoque, sheet_estoque_bebida
+    sheet_estoque_paralelo = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque_Paralelo")
+    return sheet, sheet_estoque, sheet_estoque_bebida, sheet_estoque_paralelo
 
-sheet, sheet_estoque, sheet_estoque_bebida = carregar_planilhas()
+sheet, sheet_estoque, sheet_estoque_bebida, sheet_estoque_paralelo = carregar_planilhas()
 
 with st.sidebar:
     st.header('Options')
@@ -404,23 +405,33 @@ if options == 'Estoque':
         st.session_state.produto2 = 'Não'
     if "produto3" not in st.session_state:
         st.session_state.produto3 = 'Não'
+    if "produto4" not in st.session_state:
+        st.session_state.produto4 = 'Não'
     
     def atualizar_produto1():
         if st.session_state.produto1 != "Não":
             st.session_state.produto2 = "Não"
             st.session_state.produto3 = "Não"
+            st.session_state.produto4 = "Não"
     def atualizar_produto2():
         if st.session_state.produto2 != "Não":
             st.session_state.produto1 = "Não"
             st.session_state.produto3 = "Não"
+            st.session_state.produto4 = "Não"
     def atualizar_produto3():
         if st.session_state.produto3 != "Não":
             st.session_state.produto2 = "Não"
             st.session_state.produto1 = "Não"
+            st.session_state.produto4 = "Não"
+    def atualizar_produto4():
+        if st.session_state.produto4 != "Não":
+            st.session_state.produto2 = "Não"
+            st.session_state.produto1 = "Não"
+            st.session_state.produto3 = "Não"
 
     col9, col10, col11 = st.columns(3)
     with col9:
-        produto1 = st.selectbox("Produto:", ['Não', 'Hambúrguer', 'Ovos', 'Queijo', 'Batatas', 'Rachel', 'Palone'], key='produto1', on_change=atualizar_produto1)
+        produto1 = st.selectbox("Produto:", ['Não', 'Hambúrguer', 'Ovos', 'Queijo', 'Rachel'], key='produto1', on_change=atualizar_produto1)
     with col10:
         produto2 = st.selectbox("Bebida:", ['Não', '2M Txoti', '2M Lata', 'Savana', 'Pretinha', 'Lite', 'Heineken Txoti', 'Impala Lata', 'MY FAIR', 'Txilar Lata'], key='produto2', on_change=atualizar_produto2)
     with col11:
@@ -429,6 +440,9 @@ if options == 'Estoque':
         qnt_hamburguer = st.slider("Quantidade", 0, 150, 50, key="qnt_hamburguer")
     else:
         qnt_estoque = st.slider("Quantidade", 0, 20, 1, key="qnt_estoque")
+    st.write("## Estoque Paralelo")
+    produto4 = st.selectbox("Produto:" ["Não", "Batatas", "Palone", "Mayonnaise", "Tomato Sauce", "Óleo", key='produto4', on_change=atualizar_produto4]
+    qnt_estoque2 = st.slider("Quantidade", 0, 10, 1, key="qnt_estoque2")
 
 
     def estoque():
@@ -436,7 +450,7 @@ if options == 'Estoque':
 
         estoque_produto = 'Sem Reposição'
         quantidade_estoque = 0
-        if st.session_state.produto1 != "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não':
+        if st.session_state.produto1 != "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não' and st.session_state.produto4 == 'Nao':
             estoque_produto = st.session_state.produto1
             if st.session_state.produto1 == "Hambúrguer":
                 quantidade_estoque = st.session_state.qnt_hamburguer
@@ -449,11 +463,11 @@ if options == 'Estoque':
             if st.session_state.produto1 == "Queijo":
                 quantidade_estoque = st.session_state.qnt_estoque * 12
             sheet_estoque_atualizar()
-        if st.session_state.produto1 == "Não" and st.session_state.produto2 != 'Não' and st.session_state.produto3 == 'Não':
+        if st.session_state.produto1 == "Não" and st.session_state.produto2 != 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 == 'Nao':
             estoque_produto = st.session_state.produto2
             quantidade_estoque = st.session_state.qnt_estoque * 6
             sheet_estoque_atualizar_bebida()
-        if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 != 'Não':
+        if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 != 'Não'and st.session_state.produto4 == 'Nao':
             estoque_produto = st.session_state.produto3
             if st.session_state.produto3 == "Água Pequena" or st.session_state.produto3 == "Sumo Cappy" or st.session_state.produto3 == "Refresco Txoti":
                 quantidade_estoque = st.session_state.qnt_estoque * 12
@@ -464,6 +478,10 @@ if options == 'Estoque':
             elif st.session_state.produto3 == "Sumo Compal":
                 quantidade_estoque = st.session_state.qnt_estoque * 10
             sheet_estoque_atualizar_bebida()
+        if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 != 'Nao':
+            estoque_produto = st.session_state.produto4
+            quantidade_estoque = st.session_state.qnt_estoque2
+            sheet_estoque_paralelo_atualizar()
 
         repor_valores()
 
@@ -475,6 +493,14 @@ if options == 'Estoque':
 
         estoque_adicionar = [[estoque_produto, date, quantidade_estoque, 0, f"=C{count}-D{count}"]]
         sheet_estoque.append_rows(estoque_adicionar, value_input_option="USER_ENTERED")
+    def sheet_estoque_paralelo_atualizar():
+        global count3
+
+        values = sheet_estoque.get_all_values()
+        count3 = len(values) + 1
+
+        estoque_adicionar = [[estoque_produto, date, quantidade_estoque]]
+        sheet_estoque_paralelo.append_rows(estoque_adicionar, value_input_option="USER_ENTERED")
     def sheet_estoque_atualizar_bebida():
         global count2
 
@@ -496,6 +522,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
