@@ -29,9 +29,9 @@ def carregar_planilhas():
         scopes=SCOPES
     )
     client = gspread.authorize(creds)
-    sheet = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Vendas")
-    sheet_estoque = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque")
-    sheet_estoque_bebida = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque_Bebidas")
+    sheet = client.open_by_key("12q4lITeTaNrQaYH15dipPAoQ2ulsimeT4LKGV0wdLH4").worksheet("Vendas")
+    sheet_estoque = client.open_by_key("12q4lITeTaNrQaYH15dipPAoQ2ulsimeT4LKGV0wdLH4").worksheet("Estoque")
+    sheet_estoque_bebida = client.open_by_key("12q4lITeTaNrQaYH15dipPAoQ2ulsimeT4LKGV0wdLH4").worksheet("Estoque_Bebidas")
     return sheet, sheet_estoque, sheet_estoque_bebida
 
 sheet, sheet_estoque, sheet_estoque_bebida = carregar_planilhas()
@@ -496,6 +496,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
