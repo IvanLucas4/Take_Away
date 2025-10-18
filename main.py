@@ -317,7 +317,7 @@ if options == 'Vendas':
             if st.session_state.sumo == "Compal":
                 preco_bebidas = 65
             if st.session_state.sumo == "Cappy":
-                preco_bebidas = 40
+                preco_bebidas = 35
         elif st.session_state.agua != "Nenhuma":
             bebida = st.session_state.agua
             if st.session_state.agua == "Água Pequena":
@@ -522,6 +522,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
