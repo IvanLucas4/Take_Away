@@ -568,7 +568,7 @@ if options == 'Relatório':
             with kp3:
                 st.metric("Produto mais vendido", mais_vendido, border=True)
             st.divider()
-            fig = px.bar(data1, x="Refeição", y="Qnt_Refeição", title="Faturamento por Refeição")
+            fig = px.bar(data1, x="Refeição", y="Total", title="Faturamento por Refeição")
             st.plotly_chart(fig, use_container_width=True)
             st.divider()
             fig = px.bar(data1, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
@@ -610,7 +610,7 @@ if options == 'Relatório':
             with kp3:
                 st.metric("Bebida mais vendida", mais_vendido, border=True)
             st.divider()
-            fig = px.bar(data1, x="Bebida", y="Qnt_Bebida", title="Faturamento por Bebida")
+            fig = px.bar(data1, x="Bebida", y="Total", title="Faturamento por Bebida")
             st.plotly_chart(fig, use_container_width=True)
             st.divider()
             fig = px.bar(data1, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebida")
@@ -674,6 +674,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
