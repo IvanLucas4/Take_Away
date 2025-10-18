@@ -583,7 +583,7 @@ if options == 'Relatório':
                 st.plotly_chart(fig, use_container_width=True)
 
         elif filtro_categoria == "Bebidas":
-            data1 = data[data["Bebida"] != "Sem Bebidas"]
+            data1 = data[data["Bebida"] != "Sem Bebida"]
             if filtro_data == "Hoje":
                 data1 = data1[data1["Data_Venda"] == date]
             elif filtro_data == "Últimos 7 dias":
@@ -674,6 +674,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
