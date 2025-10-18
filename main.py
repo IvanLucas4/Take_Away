@@ -338,13 +338,13 @@ if options == 'Vendas':
                 preco_bebidas = 85
         elif st.session_state.bebida_lata != "Nenhuma":
             bebida = st.session_state.bebida_lata if st.session_state.bebida_lata == 'MY FAIR' else f'{st.session_state.bebida_lata} Lata'
-            if st.session_state.bebida_lata == "2M Lata":
+            if st.session_state.bebida_lata == "2M":
                 preco_bebidas = 60
-            if st.session_state.bebida_lata == "Impala Lata":
+            if st.session_state.bebida_lata == "Impala":
                 preco_bebidas = 50
             if st.session_state.bebida_lata == "MY FAIR":
                 preco_bebidas = 95
-            if st.session_state.bebida_lata == "Txilar Lata":
+            if st.session_state.bebida_lata == "Txilar":
                 preco_bebidas = 55
         if bebida != "Sem Bebida":
             quantidade_bebida = st.session_state.qnt_bebidas
@@ -522,6 +522,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
