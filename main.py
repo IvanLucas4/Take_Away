@@ -557,12 +557,12 @@ if options == 'Relatório':
             mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Refeição"].idxmax(), "Refeição"]
             kp1, kp2, kp3 = st.columns(3)
             with kp1:
-                faturamento = data["Total"].sum()
+                faturamento = data1["Total"].sum()
                 st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
             with kp2:
-                volume1 = data["Qnt_Bebida"].sum()
-                volume2 = data["Qnt_Guloseima"].sum()
-                volume3 = data["Qnt_Refeição"].sum()
+                volume1 = data1["Qnt_Bebida"].sum()
+                volume2 = data1["Qnt_Guloseima"].sum()
+                volume3 = data1["Qnt_Refeição"].sum()
                 volume = volume1 + volume2 + volume3
                 st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
             with kp3:
@@ -599,12 +599,12 @@ if options == 'Relatório':
             mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Bebida"].idxmax(), "Bebida"]
             kp1, kp2, kp3 = st.columns(3)
             with kp1:
-                faturamento = data["Total"].sum()
+                faturamento = data1["Total"].sum()
                 st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
             with kp2:
-                volume1 = data["Qnt_Bebida"].sum()
-                volume2 = data["Qnt_Guloseima"].sum()
-                volume3 = data["Qnt_Refeição"].sum()
+                volume1 = data1["Qnt_Bebida"].sum()
+                volume2 = data1["Qnt_Guloseima"].sum()
+                volume3 = data1["Qnt_Refeição"].sum()
                 volume = volume1 + volume2 + volume3
                 st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
             with kp3:
@@ -674,6 +674,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
