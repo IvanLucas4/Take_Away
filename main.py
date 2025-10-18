@@ -1,7 +1,9 @@
 import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
-from datetime import datetime
+from datetime import datetime, timedelta
+import pandas as pd
+import plotly.express as px
 
 # tela de login
 if "authenticated" not in st.session_state:
@@ -672,6 +674,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
