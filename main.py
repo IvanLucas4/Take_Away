@@ -334,7 +334,7 @@ if options == 'Vendas':
                 preco_bebidas = 55
             if st.session_state.bebida_garrafa == "Lite":
                 preco_bebidas = 70
-            if st.session_state.bebida_garrafa == "Heineken Txoti":
+            if st.session_state.bebida_garrafa == "Heineken":
                 preco_bebidas = 85
         elif st.session_state.bebida_lata != "Nenhuma":
             bebida = st.session_state.bebida_lata if st.session_state.bebida_lata == 'MY FAIR' else f'{st.session_state.bebida_lata} Lata'
@@ -522,6 +522,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
