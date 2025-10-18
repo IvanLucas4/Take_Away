@@ -1,3 +1,5 @@
 gspread
 google-auth
 datetime
+pandas
+plotly
