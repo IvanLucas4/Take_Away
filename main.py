@@ -148,7 +148,7 @@ if options == 'Vendas':
         agua = st.selectbox("Água:", ['Nenhuma', 'Água Pequena', 'Água Grande'], key='agua', on_change=atualizar_agua)
     col7, col8 = st.columns(2)
     with col7:
-        bebida_garrafa = st.selectbox("Bebida a Garrafa:", ['Nenhum', '2M Txoti', 'Savana', 'Pretinha', 'Lite', 'Heineken'], key='bebida_garrafa', on_change=atualizar_bebida_garrafa)
+        bebida_garrafa = st.selectbox("Bebida a Garrafa:", ['Nenhum', '2M Txoti', 'Savana', 'Pretinha', 'Lite', 'Heineken Txoti'], key='bebida_garrafa', on_change=atualizar_bebida_garrafa)
     with col8:
         bebida_lata = st.selectbox("Bebida a Lata:", ['Nenhum', '2M', 'Impala', 'MY FAIR', 'Txilar'], key='bebida_lata', on_change=atualizar_bebida_lata)
     qnt_bebidas = st.slider("Quantidade", 0, 10, 1, key='qnt_bebidas')
@@ -334,7 +334,7 @@ if options == 'Vendas':
                 preco_bebidas = 55
             if st.session_state.bebida_garrafa == "Lite":
                 preco_bebidas = 70
-            if st.session_state.bebida_garrafa == "Heineken":
+            if st.session_state.bebida_garrafa == "Heineken Txoti":
                 preco_bebidas = 85
         elif st.session_state.bebida_lata != "Nenhuma":
             bebida = st.session_state.bebida_lata if st.session_state.bebida_lata == 'MY FAIR' else f'{st.session_state.bebida_lata} Lata'
@@ -522,6 +522,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
