@@ -450,7 +450,7 @@ if options == 'Estoque':
 
         estoque_produto = 'Sem Reposição'
         quantidade_estoque = 0
-        if st.session_state.produto1 != "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não' and st.session_state.produto4 == 'Nao':
+        if st.session_state.produto1 != "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não' and st.session_state.produto4 == 'Não':
             estoque_produto = st.session_state.produto1
             if st.session_state.produto1 == "Hambúrguer":
                 quantidade_estoque = st.session_state.qnt_hamburguer
@@ -463,11 +463,11 @@ if options == 'Estoque':
             if st.session_state.produto1 == "Queijo":
                 quantidade_estoque = st.session_state.qnt_estoque * 12
             sheet_estoque_atualizar()
-        if st.session_state.produto1 == "Não" and st.session_state.produto2 != 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 == 'Nao':
+        if st.session_state.produto1 == "Não" and st.session_state.produto2 != 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 == 'Não':
             estoque_produto = st.session_state.produto2
             quantidade_estoque = st.session_state.qnt_estoque * 6
             sheet_estoque_atualizar_bebida()
-        if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 != 'Não'and st.session_state.produto4 == 'Nao':
+        if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 != 'Não'and st.session_state.produto4 == 'Não':
             estoque_produto = st.session_state.produto3
             if st.session_state.produto3 == "Água Pequena" or st.session_state.produto3 == "Sumo Cappy" or st.session_state.produto3 == "Refresco Txoti":
                 quantidade_estoque = st.session_state.qnt_estoque * 12
@@ -478,7 +478,7 @@ if options == 'Estoque':
             elif st.session_state.produto3 == "Sumo Compal":
                 quantidade_estoque = st.session_state.qnt_estoque * 10
             sheet_estoque_atualizar_bebida()
-        if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 != 'Nao':
+        if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 != 'Não':
             estoque_produto = st.session_state.produto4
             quantidade_estoque = st.session_state.qnt_estoque2
             sheet_estoque_paralelo_atualizar()
@@ -522,6 +522,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
