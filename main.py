@@ -534,6 +534,7 @@ if options == 'Relatório':
         data["Qnt_Guloseima"] = pd.to_numeric(data["Qnt_Guloseima"], errors="coerce")
         data["Total"] = pd.to_numeric(data["Total"], errors="coerce")
         data["Data_Venda"] = pd.to_datetime(data["Data_Venda"], format="%d-%m-%Y")
+        data_geral = data[data["Data_Venda"] == date]
         fil1, fil2 = st.columns(2)
         with fil1:
             filtro_categoria = st.selectbox("Categoria", ["Produtos Alimentícios", "Bebidas"])
@@ -555,7 +556,17 @@ if options == 'Relatório':
 
             vendas_por_produto = data1.groupby("Refeição")["Qnt_Refeição"].sum().reset_index()
             mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Refeição"].idxmax(), "Refeição"]
+            kp4, kp5 = st.columns(2)
             kp1, kp2, kp3 = st.columns(3)
+            with kp4:
+                faturamento_geral = data_geral["Total"].sum()
+                st.metric("Faturamento Total Geral", f'{faturamento_geral}.00 MZN', border=True)
+            with kp5:
+                volume4 = data_geral["Qnt_Bebida"].sum()
+                volume5 = data_geral["Qnt_Guloseima"].sum()
+                volume6 = data_geral["Qnt_Refeição"].sum()
+                volume = volume4 + volume5 + volume6
+                st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
             with kp1:
                 faturamento = data1["Total"].sum()
                 st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
@@ -597,7 +608,17 @@ if options == 'Relatório':
 
             vendas_por_produto = data1.groupby("Bebida")["Qnt_Bebida"].sum().reset_index()
             mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Bebida"].idxmax(), "Bebida"]
+            kp4, kp5 = st.columns(2)
             kp1, kp2, kp3 = st.columns(3)
+            with kp4:
+                faturamento_geral = data_geral["Total"].sum()
+                st.metric("Faturamento Total Geral", f'{faturamento_geral}.00 MZN', border=True)
+            with kp5:
+                volume4 = data_geral["Qnt_Bebida"].sum()
+                volume5 = data_geral["Qnt_Guloseima"].sum()
+                volume6 = data_geral["Qnt_Refeição"].sum()
+                volume = volume4 + volume5 + volume6
+                st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
             with kp1:
                 faturamento = data1["Total"].sum()
                 st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
@@ -674,6 +695,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
