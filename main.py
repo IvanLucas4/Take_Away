@@ -40,6 +40,9 @@ sheet, sheet_estoque, sheet_estoque_bebida, sheet_estoque_paralelo = carregar_pl
 with st.sidebar:
     st.header('Options')
     options = st.selectbox("Modo", ['Vendas', 'Estoque', 'Relatório'])
+    if options == "Relatório":
+        st.write("## Filtros do Dashboard")
+        aba = st.selectbox("Venda/Estoque", ['Relatório de Vendas', 'Relatório de Estoque'])
     st.markdown("[📁 Planilha](https://docs.google.com/spreadsheets/d/1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4/edit?gid=1947090066#gid=1947090066)")
 
 if options == 'Vendas':
@@ -522,6 +525,7 @@ if options == 'Relatório':
     st.title("📊 Dashboard e Relatórios")
     st.write("## Em Breve!")
     
+
 
 
 
