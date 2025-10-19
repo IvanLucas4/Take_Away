@@ -556,34 +556,37 @@ if options == 'Relatório':
                 data_geral = data[data["Data_Venda"] >= date_30]
                 msg = "o Mês"
 
-            vendas_por_produto = data1.groupby("Refeição")["Qnt_Refeição"].sum().reset_index()
-            mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Refeição"].idxmax(), "Refeição"]
-            kp1, kp2, kp3 = st.columns(3)
-            with kp1:
-                faturamento = data_geral["Total"].sum()
-                st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
-            with kp2:
-                volume1 = data_geral["Qnt_Bebida"].sum()
-                volume2 = data_geral["Qnt_Guloseima"].sum()
-                volume3 = data_geral["Qnt_Refeição"].sum()
-                volume = volume1 + volume2 + volume3
-                st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
-            with kp3:
-                st.metric("Produto mais vendido", mais_vendido, border=True)
-            st.divider()
-            fig = px.bar(data1, x="Refeição", y="Total", title="Faturamento por Refeição")
-            st.plotly_chart(fig, use_container_width=True)
-            st.divider()
-            fig = px.bar(data1, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
-            st.plotly_chart(fig, use_container_width=True)
-            st.divider()
-            if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
-                df_grouped = (data1.groupby("Data_Venda", as_index=False)
-                                .agg({"Qnt_Refeição": "sum"})  # soma as quantidades por data
-                                )
-                fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Refeição", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
-                fig.update_xaxes(tickformat="%d-%m-%Y")
+            if data1.empty:
+                st.write("### Sem Vendas Realizadas Ainda!")
+            else:
+                vendas_por_produto = data1.groupby("Refeição")["Qnt_Refeição"].sum().reset_index()
+                mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Refeição"].idxmax(), "Refeição"]
+                kp1, kp2, kp3 = st.columns(3)
+                with kp1:
+                    faturamento = data_geral["Total"].sum()
+                    st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
+                with kp2:
+                    volume1 = data_geral["Qnt_Bebida"].sum()
+                    volume2 = data_geral["Qnt_Guloseima"].sum()
+                    volume3 = data_geral["Qnt_Refeição"].sum()
+                    volume = volume1 + volume2 + volume3
+                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
+                with kp3:
+                    st.metric("Produto mais vendido", mais_vendido, border=True)
+                st.divider()
+                fig = px.bar(data1, x="Refeição", y="Total", title="Faturamento por Refeição")
                 st.plotly_chart(fig, use_container_width=True)
+                st.divider()
+                fig = px.bar(data1, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
+                st.plotly_chart(fig, use_container_width=True)
+                st.divider()
+                if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
+                    df_grouped = (data1.groupby("Data_Venda", as_index=False)
+                                    .agg({"Qnt_Refeição": "sum"})  # soma as quantidades por data
+                                    )
+                    fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Refeição", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
+                    fig.update_xaxes(tickformat="%d-%m-%Y")
+                    st.plotly_chart(fig, use_container_width=True)
 
         elif filtro_categoria == "Bebidas":
             data1 = data[data["Bebida"] != "Sem Bebida"]
@@ -599,34 +602,37 @@ if options == 'Relatório':
                 data_geral = data[data["Data_Venda"] >= date_30]
                 msg = "o Mês"
 
-            vendas_por_produto = data1.groupby("Bebida")["Qnt_Bebida"].sum().reset_index()
-            mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Bebida"].idxmax(), "Bebida"]
-            kp1, kp2, kp3 = st.columns(3)
-            with kp1:
-                faturamento = data_geral["Total"].sum()
-                st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
-            with kp2:
-                volume1 = data_geral["Qnt_Bebida"].sum()
-                volume2 = data_geral["Qnt_Guloseima"].sum()
-                volume3 = data_geral["Qnt_Refeição"].sum()
-                volume = volume1 + volume2 + volume3
-                st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
-            with kp3:
-                st.metric("Bebida mais vendida", mais_vendido, border=True)
-            st.divider()
-            fig = px.bar(data1, x="Bebida", y="Total", title="Faturamento por Bebida")
-            st.plotly_chart(fig, use_container_width=True)
-            st.divider()
-            fig = px.bar(data1, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebida")
-            st.plotly_chart(fig, use_container_width=True)
-            st.divider()
-            if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
-                df_grouped = (data1.groupby("Data_Venda", as_index=False)
-                                .agg({"Qnt_Bebida": "sum"})  # soma as quantidades por data
-                                )
-                fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Bebida", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
-                fig.update_xaxes(tickformat="%d-%m-%Y")
+            if data1.empty:
+                st.write("### Sem Vendas Realizadas Ainda!")
+            else:
+                vendas_por_produto = data1.groupby("Bebida")["Qnt_Bebida"].sum().reset_index()
+                mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Bebida"].idxmax(), "Bebida"]
+                kp1, kp2, kp3 = st.columns(3)
+                with kp1:
+                    faturamento = data_geral["Total"].sum()
+                    st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
+                with kp2:
+                    volume1 = data_geral["Qnt_Bebida"].sum()
+                    volume2 = data_geral["Qnt_Guloseima"].sum()
+                    volume3 = data_geral["Qnt_Refeição"].sum()
+                    volume = volume1 + volume2 + volume3
+                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
+                with kp3:
+                    st.metric("Bebida mais vendida", mais_vendido, border=True)
+                st.divider()
+                fig = px.bar(data1, x="Bebida", y="Total", title="Faturamento por Bebida")
                 st.plotly_chart(fig, use_container_width=True)
+                st.divider()
+                fig = px.bar(data1, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebida")
+                st.plotly_chart(fig, use_container_width=True)
+                st.divider()
+                if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
+                    df_grouped = (data1.groupby("Data_Venda", as_index=False)
+                                    .agg({"Qnt_Bebida": "sum"})  # soma as quantidades por data
+                                    )
+                    fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Bebida", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
+                    fig.update_xaxes(tickformat="%d-%m-%Y")
+                    st.plotly_chart(fig, use_container_width=True)
 
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
@@ -678,6 +684,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
