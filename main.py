@@ -452,6 +452,11 @@ if options == 'Estoque':
             st.session_state.produto2 = "Não"
             st.session_state.produto1 = "Não"
             st.session_state.produto3 = "Não"
+    def atualizar_preco_produto4():
+        if st.session_state.preco_produto4 != 0:
+            st.session_state.produto2 = "Não"
+            st.session_state.produto1 = "Não"
+            st.session_state.produto3 = "Não"
 
     col9, col10, col11 = st.columns(3)
     with col9:
@@ -469,7 +474,7 @@ if options == 'Estoque':
     with pr:
         produto4 = st.selectbox("Produto:", ["Não", "Batatas", "Palone", "Mayonnaise", "Tomato Sauce", "Óleo"], key='produto4', on_change=atualizar_produto4)
     with p:
-        preco_produto4 = st.number_input("Preço:", key="preco_produto4")
+        preco_produto4 = st.number_input("Preço:", key="preco_produto4", on_change=atualizar_preco_produto4)
     qnt_estoque2 = st.slider("Quantidade", 0, 10, 1, key="qnt_estoque2")
 
 
@@ -708,6 +713,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
