@@ -140,7 +140,7 @@ if options == 'Vendas':
                                     "Com Ovo e Batatas", 
                                     "Com Queijo, Ovo e Batatas"], 
                                     key='opcao')
-    batata_asinha = st.selectbox("Batatas/Asinhas/Adicional:", ['Não', '6 Asinhas', '9 Asinhas', 'Dose de Batatas', 'Rachel', 'Ovo', 'Queijo'], key='batata_asinha', on_change=atualizar_batata_asinhas)
+    batata_asinha = st.selectbox("Batatas/Asinhas/Adicional:", ['Não', '6 Asinhas', '9 Asinhas', 'Dose de Batatas', 'Rachel', 'Ovos', 'Queijo'], key='batata_asinha', on_change=atualizar_batata_asinhas)
     qnt_refeicao = st.slider("Quantidade", 0, 10, 1, key='qnt_refeicao')
 
     st.write("### Bebidas")
@@ -232,7 +232,7 @@ if options == 'Vendas':
         if produto_adicionar == "Rachel":
             sucesso &= atualizar_saida(sheet_estoque, "Rachel", quantidade_refeicao2)
         elif produto_adicionar == "Ovo":
-            sucesso &= atualizar_saida(sheet_estoque, "Ovo", quantidade_refeicao2)
+            sucesso &= atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
         elif produto_adicionar == "Queijo":
             sucesso &= atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
 
@@ -313,7 +313,7 @@ if options == 'Vendas':
                 preco_refeicao = 60
             if st.session_state.batata_asinha == "Rachel":
                 preco_refeicao = 30
-            if st.session_state.batata_asinha == "Ovo":
+            if st.session_state.batata_asinha == "Ovos":
                 preco_refeicao = 10
             if st.session_state.batata_asinha == "Queijo":
                 preco_refeicao = 20
@@ -829,6 +829,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
