@@ -426,22 +426,27 @@ if options == 'Estoque':
         st.session_state.produto3 = 'Não'
     if "produto4" not in st.session_state:
         st.session_state.produto4 = 'Não'
+    if "preco_produto4" not in st.session_state:
+        st.session_state.preco_produto4 = 0,00
     
     def atualizar_produto1():
         if st.session_state.produto1 != "Não":
             st.session_state.produto2 = "Não"
             st.session_state.produto3 = "Não"
             st.session_state.produto4 = "Não"
+            st.session_state.preco_produto4 = 0,00
     def atualizar_produto2():
         if st.session_state.produto2 != "Não":
             st.session_state.produto1 = "Não"
             st.session_state.produto3 = "Não"
             st.session_state.produto4 = "Não"
+            st.session_state.preco_produto4 = 0,00
     def atualizar_produto3():
         if st.session_state.produto3 != "Não":
             st.session_state.produto2 = "Não"
             st.session_state.produto1 = "Não"
             st.session_state.produto4 = "Não"
+            st.session_state.preco_produto4 = 0,00
     def atualizar_produto4():
         if st.session_state.produto4 != "Não":
             st.session_state.produto2 = "Não"
@@ -703,6 +708,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
