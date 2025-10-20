@@ -228,6 +228,14 @@ if options == 'Vendas':
                 if "Queijo" in produto_adicionar:
                     sucesso &= atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
 
+        # --- Adicional ---
+        if produto_adicionar == "Rachel":
+            sucesso &= atualizar_saida(sheet_estoque, "Rachel", quantidade_refeicao2)
+        elif produto_adicionar == "Ovo":
+            sucesso &= atualizar_saida(sheet_estoque, "Ovo", quantidade_refeicao2)
+        elif produto_adicionar == "Queijo":
+            sucesso &= atualizar_saida(sheet_estoque, "Queijo", quantidade_refeicao2)
+
         # --- Bebidas ---
         if bebida_adicionar != "Sem Bebida":
             sucesso &= atualizar_saida(sheet_estoque_bebida, bebida_adicionar, quantidade_bebidas2)
@@ -690,6 +698,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
