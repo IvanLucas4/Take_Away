@@ -479,10 +479,11 @@ if options == 'Estoque':
 
 
     def estoque():
-        global estoque_produto, quantidade_estoque
+        global estoque_produto, quantidade_estoque, preco_produto_paralelo
 
         estoque_produto = 'Sem Reposição'
         quantidade_estoque = 0
+        preco_produto_paralelo = 0
         if st.session_state.produto1 != "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não' and st.session_state.produto4 == 'Não':
             estoque_produto = st.session_state.produto1
             if st.session_state.produto1 == "Hambúrguer":
@@ -713,6 +714,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
