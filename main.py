@@ -564,24 +564,111 @@ if options == 'Relatório':
         data["Qnt_Guloseima"] = pd.to_numeric(data["Qnt_Guloseima"], errors="coerce")
         data["Total"] = pd.to_numeric(data["Total"], errors="coerce")
         data["Data_Venda"] = pd.to_datetime(data["Data_Venda"], format="%d-%m-%Y")
+        data["Data"] = data["Data_Venda"].dt.date
+        date_ontem = dts.date() - timedelta(days=1)
+        date_ontem2 = dts.date() - timedelta(days=2)
         date_7 = (dts - timedelta(days=7))
+        date_14 = (dts - timedelta(days=14))
         date_30 = (dts - timedelta(days=30))
+        date_60 = (dts - timedelta(days=60))
         fil1, fil2 = st.columns(2)
         with fil1:
-            filtro_categoria = st.selectbox("Categoria", ["Produtos Alimentícios", "Bebidas"])
+            filtro_categoria = st.selectbox("Categoria", ["Todos", "Produtos Alimentícios", "Bebidas"])
         with fil2:
-            filtro_data = st.selectbox("Data", ["Hoje", "Últimos 7 dias", "Últimos 30 dias"])
+            filtro_data = st.selectbox("Data", ["Hoje", "Ontem", "Últimos 7 dias", "Últimos 30 dias"])
         st.divider()
-        if filtro_categoria == "Produtos Alimentícios":
+        if filtro_categoria == "Todos":
+            if filtro_data == "Hoje":
+                data_anterior = data[data["Data"] == date_ontem]
+                data = data[data["Data_Venda"] == date]
+                data_geral = data[data["Data_Venda"] == date]
+            elif filtro_data == "Ontem":
+                data_anterior = data[data["Data"] == date_ontem2]
+                data = data[data["Data"] == date_ontem]
+                data_geral = data[data["Data"] == date_ontem]
+            elif filtro_data == "Últimos 7 dias":
+                data_anterior = data[(data["Data_Venda"] >= date_14) & (data["Data_Venda"] <= date_7)]
+                data = data[data["Data_Venda"] >= date_7]
+                data_geral = data[data["Data_Venda"] >= date_7]
+                msg = "a Semana"
+            elif filtro_data == "Últimos 30 dias":
+                data_anterior = data[(data["Data_Venda"] >= date_60) & (data["Data_Venda"] <= date_30)]
+                data = data[data["Data_Venda"] >= date_30]
+                data_geral = data[data["Data_Venda"] >= date_30]
+                msg = "o Mês"
+            
+            if data.empty:
+                st.write("### Sem Vendas Realizadas Ainda!")
+            else:
+                data_refeicao = data[data["Refeição"] != "Sem Refeição"]
+                data_bebida = data[data["Bebida"] != "Sem Bebida"]
+                vendas_por_produto = data.groupby("Refeição")["Qnt_Refeição"].sum().reset_index()
+                mais_vendido = vendas_por_produto.loc[vendas_por_produto["Qnt_Refeição"].idxmax(), "Refeição"]
+                kp1, kp2, kp3 = st.columns(3)
+                with kp1:
+                    faturamento = data_geral["Total"].sum()
+                    faturamento2 = data_anterior["Total"].sum()
+                    diferenca = (faturamento - faturamento2) if not data_anterior.empty else 0
+                    diferenca = int(diferenca) if diferenca else 0
+                    st.metric("Faturamento Total", f'{faturamento}.00 MZN', delta=f"{diferenca}.00 MZN", border=True, delta_color="off" if diferenca == 0 else "normal")
+                with kp2:
+                    volume1 = data_geral["Qnt_Bebida"].sum()
+                    volume2 = data_geral["Qnt_Guloseima"].sum()
+                    volume3 = data_geral["Qnt_Refeição"].sum()
+                    volume = volume1 + volume2 + volume3
+                    volume4 = data_anterior["Qnt_Bebida"].sum()
+                    volume5 = data_anterior["Qnt_Guloseima"].sum()
+                    volume6 = data_anterior["Qnt_Refeição"].sum()
+                    volume_anterior = volume4 + volume5 + volume6
+                    volume_diferenca = (volume - volume_anterior) if not data_anterior.empty else 0
+                    volume_diferenca = int(volume_diferenca) if volume_diferenca else 0
+                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
+                with kp3:
+                    st.metric("Produto mais vendido", mais_vendido, border=True)
+                st.divider()
+                fig1, fig2 = st.columns(2)
+                with fig1:
+                    fig = px.bar(data_refeicao, x="Refeição", y="Total", title="Faturamento por Refeição")
+                    st.plotly_chart(fig, use_container_width=True)
+                with fig2:
+                    fig = px.bar(data_refeicao, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
+                    st.plotly_chart(fig, use_container_width=True)
+                st.divider()
+                fig3, fig4 = st.columns(2)
+                with fig3:
+                    fig = px.bar(data_bebida, x="Bebida", y="Total", title="Faturamento por Bebidas")
+                    st.plotly_chart(fig, use_container_width=True)
+                with fig4:
+                    fig = px.bar(data_bebida, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebidas")
+                    st.plotly_chart(fig, use_container_width=True)
+                st.divider()
+                if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
+                    data["Qnt_Total"] = data["Qnt_Refeição"] + data["Qnt_Bebida"] + data["Qnt_Guloseima"]
+                    df_grouped = (data.groupby("Data_Venda", as_index=False)
+                                    .agg({"Qnt_Total": "sum"})  # soma as quantidades por data
+                                    )
+                    fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Total", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
+                    fig.update_xaxes(tickformat="%d-%m-%Y")
+                    st.plotly_chart(fig, use_container_width=True)
+
+
+        elif filtro_categoria == "Produtos Alimentícios":
             data1 = data[data["Refeição"] != "Sem Refeição"]
             if filtro_data == "Hoje":
+                data_anterior = data[data["Data"] == date_ontem]
                 data1 = data1[data1["Data_Venda"] == date]
                 data_geral = data[data["Data_Venda"] == date]
+            elif filtro_data == "Ontem":
+                data_anterior = data[data["Data"] == date_ontem2]
+                data1 = data1[data1["Data"] == date_ontem]
+                data_geral = data[data["Data"] == date_ontem]
             elif filtro_data == "Últimos 7 dias":
+                data_anterior = data[(data["Data_Venda"] >= date_14) & (data["Data_Venda"] <= date_7)]
                 data1 = data1[data1["Data_Venda"] >= date_7]
                 data_geral = data[data["Data_Venda"] >= date_7]
                 msg = "a Semana"
             elif filtro_data == "Últimos 30 dias":
+                data_anterior = data[(data["Data_Venda"] >= date_60) & (data["Data_Venda"] <= date_30)]
                 data1 = data1[data1["Data_Venda"] >= date_30]
                 data_geral = data[data["Data_Venda"] >= date_30]
                 msg = "o Mês"
@@ -594,13 +681,22 @@ if options == 'Relatório':
                 kp1, kp2, kp3 = st.columns(3)
                 with kp1:
                     faturamento = data_geral["Total"].sum()
-                    st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
+                    faturamento2 = data_anterior["Total"].sum()
+                    diferenca = (faturamento - faturamento2) if not data_anterior.empty else 0
+                    diferenca = int(diferenca) if diferenca else 0
+                    st.metric("Faturamento Total", f'{faturamento}.00 MZN', delta=f"{diferenca}.00 MZN", border=True, delta_color="off" if diferenca == 0 else "normal")
                 with kp2:
                     volume1 = data_geral["Qnt_Bebida"].sum()
                     volume2 = data_geral["Qnt_Guloseima"].sum()
                     volume3 = data_geral["Qnt_Refeição"].sum()
                     volume = volume1 + volume2 + volume3
-                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
+                    volume4 = data_anterior["Qnt_Bebida"].sum()
+                    volume5 = data_anterior["Qnt_Guloseima"].sum()
+                    volume6 = data_anterior["Qnt_Refeição"].sum()
+                    volume_anterior = volume4 + volume5 + volume6
+                    volume_diferenca = (volume - volume_anterior) if not data_anterior.empty else 0
+                    volume_diferenca = int(volume_diferenca) if volume_diferenca else 0
+                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
                 with kp3:
                     st.metric("Produto mais vendido", mais_vendido, border=True)
                 st.divider()
@@ -618,16 +714,24 @@ if options == 'Relatório':
                     fig.update_xaxes(tickformat="%d-%m-%Y")
                     st.plotly_chart(fig, use_container_width=True)
 
+
         elif filtro_categoria == "Bebidas":
             data1 = data[data["Bebida"] != "Sem Bebida"]
             if filtro_data == "Hoje":
+                data_anterior = data[data["Data"] == date_ontem]
                 data1 = data1[data1["Data_Venda"] == date]
                 data_geral = data[data["Data_Venda"] == date]
+            elif filtro_data == "Ontem":
+                data_anterior = data[data["Data"] == date_ontem2]
+                data1 = data1[data1["Data"] == date_ontem]
+                data_geral = data[data["Data"] == date_ontem]
             elif filtro_data == "Últimos 7 dias":
+                data_anterior = data[(data["Data_Venda"] >= date_14) & (data["Data_Venda"] <= date_7)]
                 data1 = data1[data1["Data_Venda"] >= date_7]
                 data_geral = data[data["Data_Venda"] >= date_7]
                 msg = "a Semana"
             elif filtro_data == "Últimos 30 dias":
+                data_anterior = data[(data["Data_Venda"] >= date_60) & (data["Data_Venda"] <= date_30)]
                 data1 = data1[data1["Data_Venda"] >= date_30]
                 data_geral = data[data["Data_Venda"] >= date_30]
                 msg = "o Mês"
@@ -640,13 +744,22 @@ if options == 'Relatório':
                 kp1, kp2, kp3 = st.columns(3)
                 with kp1:
                     faturamento = data_geral["Total"].sum()
-                    st.metric("Faturamento Total", f'{faturamento}.00 MZN', border=True)
+                    faturamento2 = data_anterior["Total"].sum()
+                    diferenca = (faturamento - faturamento2) if not data_anterior.empty else 0
+                    diferenca = int(diferenca) if diferenca else 0
+                    st.metric("Faturamento Total", f'{faturamento}.00 MZN', delta=f"{diferenca}.00 MZN", border=True, delta_color="off" if diferenca == 0 else "normal")
                 with kp2:
                     volume1 = data_geral["Qnt_Bebida"].sum()
                     volume2 = data_geral["Qnt_Guloseima"].sum()
                     volume3 = data_geral["Qnt_Refeição"].sum()
                     volume = volume1 + volume2 + volume3
-                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', border=True)
+                    volume4 = data_anterior["Qnt_Bebida"].sum()
+                    volume5 = data_anterior["Qnt_Guloseima"].sum()
+                    volume6 = data_anterior["Qnt_Refeição"].sum()
+                    volume_anterior = volume4 + volume5 + volume6
+                    volume_diferenca = (volume - volume_anterior) if not data_anterior.empty else 0
+                    volume_diferenca = int(volume_diferenca) if volume_diferenca else 0
+                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
                 with kp3:
                     st.metric("Bebida mais vendida", mais_vendido, border=True)
                 st.divider()
@@ -714,6 +827,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
