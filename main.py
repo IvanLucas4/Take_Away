@@ -549,7 +549,9 @@ if options == 'Estoque':
         st.session_state.produto1 = 'Não'
         st.session_state.produto2 = 'Não'
         st.session_state.produto3 = 'Não'
+        st.session_state.produto4 = 'Não'
         st.session_state.qnt_estoque = 1
+        st.session_state.preco_produto_paralelo = 0
 
     st.button("Registrar Entrada", on_click=estoque)
 
@@ -827,6 +829,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
