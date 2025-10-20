@@ -460,7 +460,11 @@ if options == 'Estoque':
     else:
         qnt_estoque = st.slider("Quantidade", 0, 20, 1, key="qnt_estoque")
     st.write("### Estoque Paralelo")
-    produto4 = st.selectbox("Produto:", ["Não", "Batatas", "Palone", "Mayonnaise", "Tomato Sauce", "Óleo"], key='produto4', on_change=atualizar_produto4)
+    pr, p = st.columns(2)
+    with pr:
+        produto4 = st.selectbox("Produto:", ["Não", "Batatas", "Palone", "Mayonnaise", "Tomato Sauce", "Óleo"], key='produto4', on_change=atualizar_produto4)
+    with p:
+        preco_produto4 = st.number_input("Preço:", key="preco_produto4")
     qnt_estoque2 = st.slider("Quantidade", 0, 10, 1, key="qnt_estoque2")
 
 
@@ -500,6 +504,7 @@ if options == 'Estoque':
         if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 != 'Não':
             estoque_produto = st.session_state.produto4
             quantidade_estoque = st.session_state.qnt_estoque2
+            preco_produto_paralelo = st.session_state.preco_produto4
             sheet_estoque_paralelo_atualizar()
 
         repor_valores()
@@ -518,7 +523,7 @@ if options == 'Estoque':
         values = sheet_estoque.get_all_values()
         count3 = len(values) + 1
 
-        estoque_adicionar = [[estoque_produto, date, quantidade_estoque]]
+        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, preco_produto_paralelo]]
         sheet_estoque_paralelo.append_rows(estoque_adicionar, value_input_option="USER_ENTERED")
     def sheet_estoque_atualizar_bebida():
         global count2
@@ -698,6 +703,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
