@@ -580,8 +580,8 @@ if options == 'Relatório':
         data["Qnt_Bebida"] = pd.to_numeric(data["Qnt_Bebida"], errors="coerce")
         data["Qnt_Guloseima"] = pd.to_numeric(data["Qnt_Guloseima"], errors="coerce")
         data["Preço_Unitário_Refeição"] = pd.to_numeric(data["Preço_Unitário_Refeição"], errors="coerce")
-        data["Preço_Unitário_Guloseima"] = pd.to_numeric(data["Preço_Unitário_Guloseima"], errors="coerce")
-        data["Preço_Unitário_Bebida"] = pd.to_numeric(data["Preço_Unitário_Bebida"], errors="coerce")
+        data["Preço_Unitário_Guloseima"] = pd.to_numeric(data["Preço_Unitário_Guloseimas"], errors="coerce")
+        data["Preço_Unitário_Bebida"] = pd.to_numeric(data["Preço_Unitário_Bebidas"], errors="coerce")
         data["Total"] = pd.to_numeric(data["Total"], errors="coerce")
         data["total_refeicao"] = (data["Qnt_Refeição"])*(data["Preço_Unitário_Refeição"])
         data["total_bebida"] = (data["Qnt_Bebida"])*(data["Preço_Unitário_Bebida"])
@@ -851,6 +851,7 @@ if options == 'Relatório':
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
     
+
 
 
 
