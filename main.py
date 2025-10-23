@@ -533,7 +533,7 @@ if options == 'Estoque':
         if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 != 'Não':
             estoque_produto = st.session_state.produto4
             quantidade_estoque = st.session_state.qnt_estoque2
-            preco_produto_paralelo = st.session_state.preco_produto4
+            preco_produto_paralelo = st.session_state.preco_produto4 * st.session_state.qnt_estoque2
             sheet_estoque_paralelo_atualizar()
 
         repor_valores()
@@ -959,6 +959,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
