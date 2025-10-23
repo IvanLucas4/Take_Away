@@ -195,10 +195,10 @@ if options == 'Vendas':
                 if restante > 0:
                     saida_atual = int(sheet_rs.cell(linha, 5).value or 0)  # Coluna E = Saída
                     if quantidade_total <= restante:
-                        sheet_rs.update_acell(f"D{linha}", saida_atual + quantidade_total)
+                        sheet_rs.update_acell(f"E{linha}", saida_atual + quantidade_total)
                         return True
                     else:
-                        sheet_rs.update_acell(f"D{linha}", saida_atual + restante)
+                        sheet_rs.update_acell(f"E{linha}", saida_atual + restante)
                         quantidade_total -= restante
 
     def main():
@@ -959,6 +959,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
