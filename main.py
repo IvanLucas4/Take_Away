@@ -406,7 +406,7 @@ if options == 'Vendas':
         reset_inputs()
 
     container = st.container()
-    but1, but2 = st.columns(2)
+    but1, rs, but2 = st.columns(3)
     with but1:
         st.button("Registrar", on_click=registrar)
     with but2:
@@ -921,7 +921,7 @@ if options == 'Relatório':
                 if os.path.exists("Figura3.jpg"):
                     os.remove("Figura3.jpg")        
         
-        but3, but4 = st.columns(2)
+        but3, ft, but4 = st.columns(3)
         with but3:
             if st.button("🔄 Atualizar Dados"):
                 st.rerun()
@@ -982,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
