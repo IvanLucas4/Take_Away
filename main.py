@@ -182,7 +182,7 @@ if options == 'Vendas':
             return False
         total_disponivel = 0
         for linha in linhas_produto:
-            restante = sheet_rs.cell(linha, 6).value  # Coluna E = Restante
+            restante = sheet_rs.cell(linha, 6).value  # Coluna F = Restante
             restante = int(restante) if restante else 0
             total_disponivel += restante
         if total_disponivel < quantidade:
@@ -193,7 +193,7 @@ if options == 'Vendas':
                 if quantidade_total == 0:
                     break
                 if restante > 0:
-                    saida_atual = int(sheet_rs.cell(linha, 5).value or 0)  # Coluna D = Saída
+                    saida_atual = int(sheet_rs.cell(linha, 5).value or 0)  # Coluna E = Saída
                     if quantidade_total <= restante:
                         sheet_rs.update_acell(f"D{linha}", saida_atual + quantidade_total)
                         return True
@@ -959,4 +959,5 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
