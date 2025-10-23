@@ -37,10 +37,10 @@ def carregar_planilhas():
         scopes=SCOPES
     )
     client = gspread.authorize(creds)
-    sheet = client.open_by_key("12q4lITeTaNrQaYH15dipPAoQ2ulsimeT4LKGV0wdLH4").worksheet("Vendas")
-    sheet_estoque = client.open_by_key("12q4lITeTaNrQaYH15dipPAoQ2ulsimeT4LKGV0wdLH4").worksheet("Estoque")
-    sheet_estoque_bebida = client.open_by_key("12q4lITeTaNrQaYH15dipPAoQ2ulsimeT4LKGV0wdLH4").worksheet("Estoque_Bebidas")
-    sheet_estoque_paralelo = client.open_by_key("12q4lITeTaNrQaYH15dipPAoQ2ulsimeT4LKGV0wdLH4").worksheet("Estoque_Paralelo")
+    sheet = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Vendas")
+    sheet_estoque = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque")
+    sheet_estoque_bebida = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque_Bebidas")
+    sheet_estoque_paralelo = client.open_by_key("1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4").worksheet("Estoque_Paralelo")
     return sheet, sheet_estoque, sheet_estoque_bebida, sheet_estoque_paralelo
 
 sheet, sheet_estoque, sheet_estoque_bebida, sheet_estoque_paralelo = carregar_planilhas()
@@ -982,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
