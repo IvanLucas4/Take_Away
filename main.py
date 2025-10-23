@@ -909,15 +909,22 @@ if options == 'Relatório':
 
             with cont:
                 st.success("Relatório gerado! Clique no botão de download abaixo.")
+                st.download_button(
+                    label="Download Relatório de Vendas",
+                    data=PDFbytes,
+                    file_name="Relatorio de Vendas.pdf",
+                    mime="application/pdf"
+                )
+
+            # Remover as imagens temporárias
+            if os.path.exists("Figura1.jpg"):
+                os.remove("Figura1.jpg")
+            if os.path.exists("Figura2.jpg"):
+                os.remove("Figura2.jpg")
+            if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
+                if os.path.exists("Figura3.jpg"):
+                    os.remove("Figura3.jpg")        
         
-            st.download_button(
-                label="Download Relatório de Vendas",
-                data=PDFbytes,
-                file_name="Relatorio de Vendas.pdf",
-                mime="application/pdf"
-            )
-                    
-        cont = st.container()
         but3, but4 = st.columns(2)
         with but3:
             if st.button("🔄 Atualizar Dados"):
@@ -925,6 +932,7 @@ if options == 'Relatório':
         with but4:
             if not data.empty:
                 st.button("⏬ Gerar e Baixar Relatório", on_click=relatorio)
+        cont = st.container()
     
     if aba == 'Relatório de Estoque':
         categoria = st.selectbox("Categoria", ["Produtos Alimentícios", "Bebidas"])
@@ -978,6 +986,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
