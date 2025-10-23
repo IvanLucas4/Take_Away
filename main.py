@@ -54,7 +54,7 @@ with st.sidebar:
     st.markdown("[📁 Planilha](https://docs.google.com/spreadsheets/d/1HURNDK9zCl4Cj9BYvRptYa_zJfb3MPcYVkXwhY5W2o4/edit?gid=1947090066#gid=1947090066)")
 
 if options == 'Vendas':
-    st.title("🍔 Take Away App!")
+    st.title("🍔 Take Away Asfalto 11")
 
     if 'hamburguer' not in st.session_state:
         st.session_state.hamburguer = 'Não'
@@ -982,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
