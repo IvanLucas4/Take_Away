@@ -4,6 +4,11 @@ from google.oauth2.service_account import Credentials
 from datetime import datetime, timedelta
 import pandas as pd
 import plotly.express as px
+import plotly.io as pio
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+
+pio.templates.default = "plotly_white"
 
 # tela de login
 if "authenticated" not in st.session_state:
@@ -177,18 +182,18 @@ if options == 'Vendas':
             return False
         total_disponivel = 0
         for linha in linhas_produto:
-            restante = sheet_rs.cell(linha, 5).value  # Coluna E = Restante
+            restante = sheet_rs.cell(linha, 6).value  # Coluna E = Restante
             restante = int(restante) if restante else 0
             total_disponivel += restante
         if total_disponivel < quantidade:
             return False
         else:
             for linha in linhas_produto:
-                restante = int(sheet_rs.cell(linha, 5).value or 0)
+                restante = int(sheet_rs.cell(linha, 6).value or 0)
                 if quantidade_total == 0:
                     break
                 if restante > 0:
-                    saida_atual = int(sheet_rs.cell(linha, 4).value or 0)  # Coluna D = Saída
+                    saida_atual = int(sheet_rs.cell(linha, 5).value or 0)  # Coluna D = Saída
                     if quantidade_total <= restante:
                         sheet_rs.update_acell(f"D{linha}", saida_atual + quantidade_total)
                         return True
@@ -428,6 +433,8 @@ if options == 'Estoque':
         st.session_state.produto4 = 'Não'
     if "preco_produto4" not in st.session_state:
         st.session_state.preco_produto4 = 0
+    if "preco_produto123" not in st.session_state:
+        st.session_state.preco_produto123 = 0
     
     def atualizar_produto1():
         if st.session_state.produto1 != "Não":
@@ -452,11 +459,17 @@ if options == 'Estoque':
             st.session_state.produto2 = "Não"
             st.session_state.produto1 = "Não"
             st.session_state.produto3 = "Não"
+            st.session_state.preco_produto123 = 0
     def atualizar_preco_produto4():
         if st.session_state.preco_produto4 != 0:
+            st.session_state.preco_produto123 = 0
             st.session_state.produto2 = "Não"
             st.session_state.produto1 = "Não"
             st.session_state.produto3 = "Não"
+    def atualizar_preco_produto123():
+        if st.session_state.preco_produto123 != 0:
+            st.session_state.preco_produto4 = 0
+            st.session_state.produto4 = "Não"
 
     col9, col10, col11 = st.columns(3)
     with col9:
@@ -465,6 +478,7 @@ if options == 'Estoque':
         produto2 = st.selectbox("Bebida:", ['Não', '2M Txoti', '2M Lata', 'Savana', 'Pretinha', 'Lite', 'Heineken Txoti', 'Impala Lata', 'MY FAIR', 'Txilar Lata'], key='produto2', on_change=atualizar_produto2)
     with col11:
         produto3 = st.selectbox("Água/Sumo/Refrigerante:", ['Não', 'Água Pequena', 'Água Grande', 'Sumo Cappy', 'Sumo Compal', 'Refresco Garrafa', 'Refresco Txoti', 'Refresco 1L', 'Refresco 2L'], key='produto3', on_change=atualizar_produto3)
+    preco_produto123 = st.number_input("Preço:", key="preco_produto123", on_change=atualizar_preco_produto123)
     if produto1 == "Hambúrguer":
         qnt_hamburguer = st.slider("Quantidade", 0, 150, 50, key="qnt_hamburguer")
     else:
@@ -479,11 +493,12 @@ if options == 'Estoque':
 
 
     def estoque():
-        global estoque_produto, quantidade_estoque, preco_produto_paralelo
+        global estoque_produto, quantidade_estoque, preco_produto_paralelo, preco_produto_estoque
 
         estoque_produto = 'Sem Reposição'
         quantidade_estoque = 0
         preco_produto_paralelo = 0
+        preco_produto_estoque = 0
         if st.session_state.produto1 != "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não' and st.session_state.produto4 == 'Não':
             estoque_produto = st.session_state.produto1
             if st.session_state.produto1 == "Hambúrguer":
@@ -496,10 +511,12 @@ if options == 'Estoque':
                 quantidade_estoque = st.session_state.qnt_estoque * 10
             if st.session_state.produto1 == "Queijo":
                 quantidade_estoque = st.session_state.qnt_estoque * 12
+            preco_produto_estoque = preco_produto123
             sheet_estoque_atualizar()
         if st.session_state.produto1 == "Não" and st.session_state.produto2 != 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 == 'Não':
             estoque_produto = st.session_state.produto2
             quantidade_estoque = st.session_state.qnt_estoque * 6
+            preco_produto_estoque = preco_produto123
             sheet_estoque_atualizar_bebida()
         if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 != 'Não'and st.session_state.produto4 == 'Não':
             estoque_produto = st.session_state.produto3
@@ -511,6 +528,7 @@ if options == 'Estoque':
                 quantidade_estoque = st.session_state.qnt_estoque * 24
             elif st.session_state.produto3 == "Sumo Compal":
                 quantidade_estoque = st.session_state.qnt_estoque * 10
+            preco_produto_estoque = preco_produto123
             sheet_estoque_atualizar_bebida()
         if st.session_state.produto1 == "Não" and st.session_state.produto2 == 'Não' and st.session_state.produto3 == 'Não'and st.session_state.produto4 != 'Não':
             estoque_produto = st.session_state.produto4
@@ -526,7 +544,7 @@ if options == 'Estoque':
         values = sheet_estoque.get_all_values()
         count = len(values) + 1
 
-        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, 0, f"=C{count}-D{count}", f'=SE(E{count}<10;"Crítico";SE(E{count}<20;"Alerta";"Normal"))']]
+        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, preco_produto_estoque, 0, f"=C{count}-D{count}", f'=SE(E{count}<10;"Crítico";SE(E{count}<20;"Alerta";"Normal"))']]
         sheet_estoque.append_rows(estoque_adicionar, value_input_option="USER_ENTERED")
     def sheet_estoque_paralelo_atualizar():
         global count3
@@ -542,7 +560,7 @@ if options == 'Estoque':
         values = sheet_estoque_bebida.get_all_values()
         count2 = len(values) + 1
 
-        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, 0, f"=C{count2}-D{count2}", f'=SE(E{count2}<6;"Crítico";SE(E{count2}<12;"Alerta";"Normal"))']]
+        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, preco_produto_estoque, 0, f"=C{count2}-D{count2}", f'=SE(E{count2}<6;"Crítico";SE(E{count2}<12;"Alerta";"Normal"))']]
         sheet_estoque_bebida.append_rows(estoque_adicionar, value_input_option="USER_ENTERED")
 
     def repor_valores():
@@ -550,8 +568,10 @@ if options == 'Estoque':
         st.session_state.produto2 = 'Não'
         st.session_state.produto3 = 'Não'
         st.session_state.produto4 = 'Não'
+        st.session_state.preco_produto4 = 0
+        st.session_state.preco_produto123 = 0
         st.session_state.qnt_estoque = 1
-        st.session_state.preco_produto_paralelo = 0
+        st.session_state.qnt_estoque2 = 1
 
     st.button("Registrar Entrada", on_click=estoque)
 
@@ -652,8 +672,8 @@ if options == 'Relatório':
                                         value_name="Quantidade"
                                         )
                 df_sum_tot = df_junto.groupby("Categoria", as_index=False)["Quantidade"].sum()
-                fig = px.pie(df_sum_tot, values="Quantidade", names="Categoria", title="Faturamento por Categoria", hole=.4)
-                st.plotly_chart(fig, use_container_width=True)
+                fig_pie1 = px.pie(df_sum_tot, values="Quantidade", names="Categoria", title="Faturamento por Categoria", hole=.4)
+                st.plotly_chart(fig_pie1, use_container_width=True)
                 st.divider()
                 df_junto = data.melt(
                                         id_vars=["Data_Venda"],
@@ -662,8 +682,8 @@ if options == 'Relatório':
                                         value_name="Quantidade"
                                         )
                 df_sum_qnt = df_junto.groupby("Categoria", as_index=False)["Quantidade"].sum()
-                fig = px.pie(df_sum_qnt, values="Quantidade", names="Categoria", title="Volume de Vendas por Categoria", hole=.4)
-                st.plotly_chart(fig, use_container_width=True)
+                fig_pie2 = px.pie(df_sum_qnt, values="Quantidade", names="Categoria", title="Volume de Vendas por Categoria", hole=.4)
+                st.plotly_chart(fig_pie2, use_container_width=True)
                 st.divider()
                 if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
                     data["Qnt_Total"] = data["Qnt_Refeição"] + data["Qnt_Bebida"] + data["Qnt_Guloseima"]
@@ -671,9 +691,9 @@ if options == 'Relatório':
                     df_grouped = (data.groupby("Data_Venda", as_index=False)
                                     .agg({"Qnt_Total": "sum"})  # soma as quantidades por data
                                     )
-                    fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Total", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
-                    fig.update_xaxes(tickformat="%d-%m-%Y")
-                    bordered_chart(fig)
+                    fig_line = px.line(df_grouped, x="Data_Venda", y="Qnt_Total", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
+                    fig_line.update_xaxes(tickformat="%d-%m-%Y")
+                    bordered_chart(fig_line)
 
 
         elif filtro_categoria == "Produtos Alimentícios":
@@ -724,19 +744,19 @@ if options == 'Relatório':
                 with kp3:
                     st.metric("Produto mais vendido", mais_vendido, border=True)
                 st.divider()
-                fig = px.bar(data1, x="Refeição", y="Total", title="Faturamento por Refeição")
-                bordered_chart(fig)
+                fig_bar1 = px.bar(data1, x="Refeição", y="Total", title="Faturamento por Refeição")
+                bordered_chart(fig_bar1)
                 st.divider()
-                fig = px.bar(data1, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
-                bordered_chart(fig)
+                fig_bar2 = px.bar(data1, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
+                bordered_chart(fig_bar2)
                 st.divider()
                 if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
                     df_grouped = (data1.groupby("Data_Venda", as_index=False)
                                     .agg({"Qnt_Refeição": "sum"})  # soma as quantidades por data
                                     )
-                    fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Refeição", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
-                    fig.update_xaxes(tickformat="%d-%m-%Y")
-                    bordered_chart(fig)
+                    fig_line = px.line(df_grouped, x="Data_Venda", y="Qnt_Refeição", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
+                    fig_line.update_xaxes(tickformat="%d-%m-%Y")
+                    bordered_chart(fig_line)
 
 
         elif filtro_categoria == "Bebidas":
@@ -787,22 +807,105 @@ if options == 'Relatório':
                 with kp3:
                     st.metric("Bebida mais vendida", mais_vendido, border=True)
                 st.divider()
-                fig = px.bar(data1, x="Bebida", y="Total", title="Faturamento por Bebida")
-                bordered_chart(fig)
+                fig_bar1 = px.bar(data1, x="Bebida", y="Total", title="Faturamento por Bebida")
+                bordered_chart(fig_bar1)
                 st.divider()
-                fig = px.bar(data1, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebida")
-                bordered_chart(fig)
+                fig_bar2 = px.bar(data1, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebida")
+                bordered_chart(fig_bar2)
                 st.divider()
                 if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
                     df_grouped = (data1.groupby("Data_Venda", as_index=False)
                                     .agg({"Qnt_Bebida": "sum"})  # soma as quantidades por data
                                     )
-                    fig = px.line(df_grouped, x="Data_Venda", y="Qnt_Bebida", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
-                    fig.update_xaxes(tickformat="%d-%m-%Y")
-                    bordered_chart(fig)
+                    fig_line = px.line(df_grouped, x="Data_Venda", y="Qnt_Bebida", markers=True, title=f"Volume de Vendas ao Longo d{msg}")
+                    fig_line.update_xaxes(tickformat="%d-%m-%Y")
+                    bordered_chart(fig_line)
 
-        if st.button("🔄 Atualizar Dados"):
-            st.rerun()
+        def relatorio():
+            date_relatorio = dts.date()
+            if filtro_categoria == "Todos":
+                cat_most_selled = df_sum_qnt.max()
+                if cat_most_selled[0] == "Qnt_Refeição":
+                    mais_vendido_todos = "Refeição"
+                elif cat_most_selled[0] == "Qnt_Guloseima":
+                    mais_vendido_todos = "Guloseima"
+                else:
+                    mais_vendido_todos = "Bebidas"
+                most_selled = f'A Categoria com mais Vendas foi: {mais_vendido_todos}.'
+                if filtro_data == "Hoje" or filtro_data == "Ontem":
+                    fig_pie1.write_image("Figura1.jpg", engine='kaleido', scale=2)
+                    fig1 = "Figura1.jpg"
+                    writter = f'Faturamento por Categoria de Produtos e Bebidas'
+                    fig_pie2.write_image("Figura2.jpg", engine='kaleido', scale=2)
+                    fig2 = "Figura2.jpg"
+                    writter2 = f'Volume de Vendas por Categoria de Produtos e Bebidas'
+                    data_relatorio = f'{date}' if filtro_data == "Hoje" else f'{date_ontem}'
+                else:
+                    fig_pie1.write_image("Figura1.jpg", engine='kaleido', scale=2)
+                    fig1 = "Figura1.jpg"
+                    writter = f'Faturamento por Categoria de Produtos e Bebidas'
+                    fig_pie2.write_image("Figura2.jpg", engine='kaleido', scale=2)
+                    fig2 = "Figura2.jpg"
+                    writter2 = f'Volume de Vendas por Categoria de Produtos e Bebidas'
+                    fig_line.write_image("Figura3.jpg", engine='kaleido', scale=2)
+                    fig3 = "Figura3.jpg"
+                    writter3 = f'Volume de Vendas ao Longo da Semana' if filtro_data == 'Últimos 7 dias' else f'Volume de Vendas ao Longo do Mês'
+                    data_relatorio = f'{date_7.date()} a {date_relatorio}' if filtro_data == "Últimos 7 dias" else f'{date_30.date()} a {date_relatorio}'
+            else:
+                most_selled = f'A Refeição mais Vendida foi: {mais_vendido}.' if filtro_categoria == "Produtos Alimentícios" else f'A Bebida mais Vendida foi: {mais_vendido}.'
+                if filtro_data == "Hoje" or filtro_data == "Ontem":
+                    fig_bar1.write_image("Figura1.jpg", engine='kaleido', scale=2)
+                    fig1 = "Figura1.jpg"
+                    writter = f'Faturamento por Refeição' if filtro_categoria == "Produtos Alimentícios" else f'Faturamento por Bebida'
+                    fig_bar2.write_image("Figura2.jpg", engine='kaleido', scale=2)
+                    fig2 = "Figura2.jpg"
+                    writter2 = f'Volume de Vendas por Refeição' if filtro_categoria == "Produtos Alimentícios" else f'Volume de Vendas por Bebida'
+                    data_relatorio = f'{date}' if filtro_data == "Hoje" else f'{date_ontem}'
+                else:
+                    fig_bar1.write_image("Figura1.jpg", engine='kaleido', scale=2)
+                    fig1 = "Figura1.jpg"
+                    writter = f'Faturamento por Refeição' if filtro_categoria == "Produtos Alimentícios" else f'Faturamento por Bebida'
+                    fig_bar2.write_image("Figura2.jpg", engine='kaleido', scale=2)
+                    fig2 = "Figura2.jpg"
+                    writter2 = f'Volume de Vendas por Refeição' if filtro_categoria == "Produtos Alimentícios" else f'Volume de Vendas por Bebida'
+                    fig_line.write_image("Figura3.jpg", engine='kaleido', scale=2)
+                    fig3 = "Figura3.jpg"
+                    writter3 = f'Volume de Vendas ao Longo da Semana' if filtro_data == 'Últimos 7 dias' else f'Volume de Vendas ao Longo do Mês'
+                    data_relatorio = f'{date_7.date()} a {date_relatorio}' if filtro_data == "Últimos 7 dias" else f'{date_30.date()} a {date_relatorio}'
+
+            documento_pdf = canvas.Canvas('Relatorio de Vendas.pdf', A4)
+
+            documento_pdf.setFont('Helvetica-Bold', 18)
+            if filtro_data == "Hoje" or filtro_data == "Ontem":
+                documento_pdf.drawString(150, 765, f'Relatório de Vendas de {data_relatorio}')
+            else:
+                documento_pdf.drawString(90, 765, f'Relatório de Vendas de {data_relatorio}')
+
+            # escrever o texto
+            documento_pdf.setFont('Helvetica', 12)
+            documento_pdf.drawString(75, 700, f'O Faturamento Total é de: {faturamento}.00 MZN.')
+            documento_pdf.drawString(75, 675, f'O Volume total de Vendas é de: {volume}.')
+            documento_pdf.drawString(75, 650, f'{most_selled}')
+            documento_pdf.drawString(75, 600, f'{writter}:')
+            documento_pdf.drawImage(fig1, 75, 330, width=500, height=265)
+            documento_pdf.drawString(75, 270, f'{writter2}:')
+            documento_pdf.drawImage(fig2, 75, 0, width=500, height=265)
+            if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
+                documento_pdf.showPage()
+                documento_pdf.setFont('Helvetica', 12)
+                documento_pdf.drawString(75, 765, f'{writter3}:')
+                documento_pdf.drawImage(fig3, 75, 495, width=500, height=265)
+
+            # salvar relatorio
+            documento_pdf.save()
+
+        but3, but4 = st.columns(2)
+        with but3:
+            if st.button("🔄 Atualizar Dados"):
+                st.rerun()
+        with but4:
+            if not data.empty:
+                st.button("⏬ Baixar Relatório", on_click=relatorio)
     
     if aba == 'Relatório de Estoque':
         categoria = st.selectbox("Categoria", ["Produtos Alimentícios", "Bebidas"])
@@ -811,6 +914,9 @@ if options == 'Relatório':
             st.divider()
             dados_estoque = sheet_estoque.get_all_values()
             data_estoque = pd.DataFrame(dados_estoque[1:], columns=dados_estoque[0])
+            data_estoque["Quantidade_Restante"] = pd.to_numeric(data_estoque["Quantidade_Restante"], errors="coerce")
+            data_estoque["Saída"] = pd.to_numeric(data_estoque["Saída"], errors="coerce")
+            data_estoque["Entrada"] = pd.to_numeric(data_estoque["Entrada"], errors="coerce")
             color_discrete_map={
                     "Crítico": "#dc3545",
                     "Alerta": "#ffc107",
@@ -831,6 +937,9 @@ if options == 'Relatório':
             st.columns(3)[1].write("### Bebidas")
             dados_estoque_bebidas = sheet_estoque_bebida.get_all_values()
             data_estoque_bebidas = pd.DataFrame(dados_estoque_bebidas[1:], columns=dados_estoque_bebidas[0])
+            data_estoque_bebidas["Quantidade_Restante"] = pd.to_numeric(data_estoque_bebidas["Quantidade_Restante"], errors="coerce")
+            data_estoque_bebidas["Saída"] = pd.to_numeric(data_estoque_bebidas["Saída"], errors="coerce")
+            data_estoque_bebidas["Entrada"] = pd.to_numeric(data_estoque_bebidas["Entrada"], errors="coerce")
             color_discrete_map={
                     "Crítico": "#dc3545",
                     "Alerta": "#ffc107",
@@ -850,51 +959,3 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
