@@ -834,14 +834,10 @@ if options == 'Relatório':
                     mais_vendido_todos = "Bebidas"
                 most_selled = f'A Categoria com mais Vendas foi: {mais_vendido_todos}.'
                 if filtro_data == "Hoje" or filtro_data == "Ontem":
-                    img1 = pio.to_image(fig_pie1, format="png", scale=2)
-                    with open("Figura1.png", "wb") as f:
-                        f.write(img1)
+                    fig_pie1.write_image("Figura1.jpg", engine='kaleido', scale=2)
                     fig1 = "Figura1.jpg"
                     writter = f'Faturamento por Categoria de Produtos e Bebidas'
-                    img2 = pio.to_image(fig_pie2, format="png", scale=2)
-                    with open("Figura2.png", "wb") as f:
-                        f.write(img2)
+                    fig_pie2.write_image("Figura2.jpg", engine='kaleido', scale=2)
                     fig2 = "Figura2.jpg"
                     writter2 = f'Volume de Vendas por Categoria de Produtos e Bebidas'
                     data_relatorio = f'{date}' if filtro_data == "Hoje" else f'{date_ontem}'
@@ -986,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
