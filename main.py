@@ -408,7 +408,7 @@ if options == 'Vendas':
     container = st.container()
     but1, rs, but2 = st.columns(3)
     with but1:
-        st.button("✍️ Registrar", on_click=registrar)
+        st.button("➕ Registrar", on_click=registrar)
     with but2:
         if st.button("🚪 Sair"):
             st.session_state.authenticated = False
@@ -982,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
