@@ -17,7 +17,7 @@ if "authenticated" not in st.session_state:
 if not st.session_state.authenticated:
     st.title("🔏 Acesso Restrito")
     codigo = st.text_input("Digite o Código de Acesso", type="password", max_chars=4)
-    if st.button("Entrar"):
+    if st.button("🔑 Entrar"):
         if codigo == st.secrets["auth"]["access_code"]:
             st.session_state.authenticated = True
             st.success("Acesso Autorizado ✅")
@@ -408,9 +408,9 @@ if options == 'Vendas':
     container = st.container()
     but1, rs, but2 = st.columns(3)
     with but1:
-        st.button("Registrar", on_click=registrar)
+        st.button("✍️ Registrar", on_click=registrar)
     with but2:
-        if st.button("Sair"):
+        if st.button("🚪 Sair"):
             st.session_state.authenticated = False
             st.rerun()
     if "mensagem_venda" in st.session_state:
@@ -574,7 +574,7 @@ if options == 'Estoque':
         st.session_state.qnt_estoque = 1
         st.session_state.qnt_estoque2 = 1
 
-    st.button("Registrar Entrada", on_click=estoque)
+    st.button("✍️ Registrar Entrada", on_click=estoque)
 
 if options == 'Relatório':
     st.title("📊 Dashboards e Relatórios")
@@ -982,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
