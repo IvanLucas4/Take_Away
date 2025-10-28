@@ -545,7 +545,7 @@ if options == 'Estoque':
         values = sheet_estoque.get_all_values()
         count = len(values) + 1
 
-        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, preco_produto_estoque, 0, f"=C{count}-E{count}", f'=SE(E{count}<10;"Crítico";SE(E{count}<20;"Alerta";"Normal"))']]
+        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, preco_produto_estoque, 0, f"=C{count}-E{count}", f'=SE(F{count}<10;"Crítico";SE(F{count}<20;"Alerta";"Normal"))']]
         sheet_estoque.append_rows(estoque_adicionar, value_input_option="USER_ENTERED")
     def sheet_estoque_paralelo_atualizar():
         global count3
@@ -561,7 +561,7 @@ if options == 'Estoque':
         values = sheet_estoque_bebida.get_all_values()
         count2 = len(values) + 1
 
-        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, preco_produto_estoque, 0, f"=C{count2}-E{count2}", f'=SE(E{count2}<6;"Crítico";SE(E{count2}<12;"Alerta";"Normal"))']]
+        estoque_adicionar = [[estoque_produto, date, quantidade_estoque, preco_produto_estoque, 0, f"=C{count2}-E{count2}", f'=SE(F{count2}<6;"Crítico";SE(F{count2}<12;"Alerta";"Normal"))']]
         sheet_estoque_bebida.append_rows(estoque_adicionar, value_input_option="USER_ENTERED")
 
     def repor_valores():
@@ -982,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
