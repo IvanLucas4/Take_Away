@@ -664,7 +664,7 @@ if options == 'Relatório':
                     volume_anterior = volume4 + volume5 + volume6
                     volume_diferenca = (volume - volume_anterior) if not data_anterior.empty else 0
                     volume_diferenca = int(volume_diferenca) if volume_diferenca else 0
-                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
+                    st.metric("Volume de Vendas Total", f'{volume} Vendas', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
                 st.divider()
                 df_junto = data.melt(
                                         id_vars=["Data_Venda"],
@@ -741,7 +741,7 @@ if options == 'Relatório':
                     volume_anterior = volume4 + volume5 + volume6
                     volume_diferenca = (volume - volume_anterior) if not data_anterior.empty else 0
                     volume_diferenca = int(volume_diferenca) if volume_diferenca else 0
-                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
+                    st.metric("Volume de Vendas Total", f'{volume} Vendas', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
                 with kp3:
                     st.metric("Produto mais vendido", mais_vendido, border=True)
                 st.divider()
@@ -804,7 +804,7 @@ if options == 'Relatório':
                     volume_anterior = volume4 + volume5 + volume6
                     volume_diferenca = (volume - volume_anterior) if not data_anterior.empty else 0
                     volume_diferenca = int(volume_diferenca) if volume_diferenca else 0
-                    st.metric("Volume de Vendas Total", f'{volume} Vendidos', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
+                    st.metric("Volume de Vendas Total", f'{volume} Vendas', delta=volume_diferenca, border=True, delta_color="off" if volume_diferenca == 0 else "normal")
                 with kp3:
                     st.metric("Bebida mais vendida", mais_vendido, border=True)
                 st.divider()
@@ -982,6 +982,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
