@@ -810,10 +810,12 @@ if options == 'Relatório':
                 with kp3:
                     st.metric("Bebida mais vendida", mais_vendido, border=True)
                 st.divider()
-                fig_bar1 = px.bar(data1, x="Bebida", y="Total", title="Faturamento por Bebida")
+                group_total = data1.groupby("Bebida", as_index=False)["Total"].sum()
+                fig_bar1 = px.bar(group_total, x="Bebida", y="Total", title="Faturamento por Bebida")
                 bordered_chart(fig_bar1)
                 st.divider()
-                fig_bar2 = px.bar(data1, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebida")
+                group_qnt = data1.groupby("Bebida", as_index=False)["Qnt_Bebida"].sum()
+                fig_bar2 = px.bar(group_qnt, x="Bebida", y="Qnt_Bebida", title="Volume de Vendas por Bebida")
                 bordered_chart(fig_bar2)
                 st.divider()
                 if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
@@ -947,7 +949,8 @@ if options == 'Relatório':
                     "Alerta": "#ffc107",
                     "Normal": "#28a745"
                 }
-            fig = px.bar(data_estoque, x="Quantidade_Restante", y="Produto", color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
+            group_estoque = data_estoque.groupby("Produto", as_index=False)["Quantidade_Restante"].sum()
+            fig = px.bar(group_estoque, x="Quantidade_Restante", y="Produto", color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
             bordered_chart(fig)
             st.divider()
             df_melted = data_estoque.melt(
@@ -970,7 +973,8 @@ if options == 'Relatório':
                     "Alerta": "#ffc107",
                     "Normal": "#28a745"
                 }
-            fig = px.bar(data_estoque_bebidas, x="Quantidade_Restante", y="Bebida",color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
+            group_estoque = data_estoque_bebidas.groupby("Bebida", as_index=False)["Quantidade_Restante"].sum()
+            fig = px.bar(group_estoque, x="Quantidade_Restante", y="Bebida",color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
             bordered_chart(fig)
             st.divider()
             df_melted = data_estoque_bebidas.melt(
@@ -984,6 +988,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
