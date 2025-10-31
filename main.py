@@ -745,10 +745,12 @@ if options == 'Relatório':
                 with kp3:
                     st.metric("Produto mais vendido", mais_vendido, border=True)
                 st.divider()
-                fig_bar1 = px.bar(data1, x="Refeição", y="Total", title="Faturamento por Refeição")
+                group_total = data1.groupby("Refeição", as_index=False)["Total"].sum()
+                fig_bar1 = px.bar(group_total, x="Refeição", y="Total", title="Faturamento por Refeição")
                 bordered_chart(fig_bar1)
                 st.divider()
-                fig_bar2 = px.bar(data1, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
+                group_qnt = data1.groupby("Refeição", as_index=False)["Qnt_Refeição"].sum()
+                fig_bar2 = px.bar(group_qnt, x="Refeição", y="Qnt_Refeição", title="Volume de Vendas por Refeição")
                 bordered_chart(fig_bar2)
                 st.divider()
                 if filtro_data == "Últimos 7 dias" or filtro_data == "Últimos 30 dias":
@@ -982,6 +984,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
