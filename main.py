@@ -950,7 +950,7 @@ if options == 'Relatório':
                     "Normal": "#28a745"
                 }
             group_estoque = data_estoque.groupby("Produto", as_index=False)["Quantidade_Restante"].sum()
-            fig = px.bar(group_estoque, x="Quantidade_Restante", y="Produto", color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
+            fig = px.bar(data_estoque, x="Quantidade_Restante", y="Produto", color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
             bordered_chart(fig)
             st.divider()
             df_melted = data_estoque.melt(
@@ -974,7 +974,7 @@ if options == 'Relatório':
                     "Normal": "#28a745"
                 }
             group_estoque = data_estoque_bebidas.groupby("Bebida", as_index=False)["Quantidade_Restante"].sum()
-            fig = px.bar(group_estoque, x="Quantidade_Restante", y="Bebida",color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
+            fig = px.bar(data_estoque_bebidas, x="Quantidade_Restante", y="Bebida",color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
             bordered_chart(fig)
             st.divider()
             df_melted = data_estoque_bebidas.melt(
@@ -988,6 +988,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
