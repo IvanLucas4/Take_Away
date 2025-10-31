@@ -974,6 +974,7 @@ if options == 'Relatório':
                     "Normal": "#28a745"
                 }
             group_estoque = data_estoque_bebidas.groupby("Bebida", as_index=False)["Quantidade_Restante"].sum()
+            st.dataframe(group_estoque)
             fig = px.bar(data_estoque_bebidas, x="Quantidade_Restante", y="Bebida",color="Nível de Estoque", color_discrete_map=color_discrete_map, orientation="h", title="Quantidade Restante")
             bordered_chart(fig)
             st.divider()
@@ -988,6 +989,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
