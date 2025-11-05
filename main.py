@@ -154,7 +154,7 @@ if options == 'Vendas':
     with col6:
         refrigerante = st.selectbox("Refresco:", ['Nenhum', 'Garrafa', 'Txoti', '1L', '2L'], key='refrigerante', on_change=atualizar_refrigerante)
     with col5:
-        sumo = st.selectbox("Sumo:", ['Nenhum', 'Compal', 'Cappy'], key='sumo', on_change=atualizar_sumo)
+        sumo = st.selectbox("Sumo:", ['Nenhum', 'Compal', 'Cappy', 'Cappy 1L'], key='sumo', on_change=atualizar_sumo)
     with col4:
         agua = st.selectbox("Água:", ['Nenhuma', 'Água Pequena', 'Água Grande'], key='agua', on_change=atualizar_agua)
     col7, col8 = st.columns(2)
@@ -225,7 +225,7 @@ if options == 'Vendas':
 
         # --- Sandes ---
         elif "Sandes" in produto_adicionar:
-            if "Sandes de Ovo" in produto_adicionar:
+            if produto_adicionar == "Sandes de Ovo":
                 sucesso &= atualizar_saida(sheet_estoque, "Ovos", quantidade_refeicao2)
             if "Rachel" in produto_adicionar:
                 sucesso &= atualizar_saida(sheet_estoque, "Rachel", quantidade_refeicao2)
@@ -343,6 +343,8 @@ if options == 'Vendas':
                 preco_bebidas = 65
             if st.session_state.sumo == "Cappy":
                 preco_bebidas = 35
+            if st.session_state.sumo == "Cappy 1L":
+                preco_bebidas = 70
         elif st.session_state.agua != "Nenhuma":
             bebida = st.session_state.agua
             if st.session_state.agua == "Água Pequena":
@@ -478,7 +480,7 @@ if options == 'Estoque':
     with col10:
         produto2 = st.selectbox("Bebida:", ['Não', '2M Txoti', '2M Lata', 'Savana', 'Pretinha', 'Lite', 'Heineken Txoti', 'Impala Lata', 'MY FAIR', 'Txilar Lata'], key='produto2', on_change=atualizar_produto2)
     with col11:
-        produto3 = st.selectbox("Água/Sumo/Refrigerante:", ['Não', 'Água Pequena', 'Água Grande', 'Sumo Cappy', 'Sumo Compal', 'Refresco Garrafa', 'Refresco Txoti', 'Refresco 1L', 'Refresco 2L'], key='produto3', on_change=atualizar_produto3)
+        produto3 = st.selectbox("Água/Sumo/Refrigerante:", ['Não', 'Água Pequena', 'Água Grande', 'Sumo Cappy', 'Sumo Cappy 1L', 'Sumo Compal', 'Refresco Garrafa', 'Refresco Txoti', 'Refresco 1L', 'Refresco 2L'], key='produto3', on_change=atualizar_produto3)
     preco_produto123 = st.number_input("Preço:", key="preco_produto123", on_change=atualizar_preco_produto123)
     if produto1 == "Hambúrguer":
         qnt_hamburguer = st.slider("Quantidade", 0, 150, 50, key="qnt_hamburguer")
@@ -523,7 +525,7 @@ if options == 'Estoque':
             estoque_produto = st.session_state.produto3
             if st.session_state.produto3 == "Água Pequena" or st.session_state.produto3 == "Sumo Cappy" or st.session_state.produto3 == "Refresco Txoti":
                 quantidade_estoque = st.session_state.qnt_estoque * 12
-            elif st.session_state.produto3 == "Refresco 1L" or st.session_state.produto3 == "Refresco 2L" or st.session_state.produto3 == "Água Grande":
+            elif st.session_state.produto3 == "Refresco 1L" or st.session_state.produto3 == "Refresco 2L" or st.session_state.produto3 == "Água Grande" or st.session_state.produto3 == "Sumo Cappy 1L":
                 quantidade_estoque = st.session_state.qnt_estoque * 6
             elif st.session_state.produto3 == "Refresco Garrafa":
                 quantidade_estoque = st.session_state.qnt_estoque * 24
@@ -986,6 +988,7 @@ if options == 'Relatório':
         
         if st.button("🔄 Atualizar Dados"):
             st.rerun()
+
 
 
 
