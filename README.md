@@ -1,6 +1,5 @@
 # 🍔 Sistema de Gestão - Take Away Asfalto 11
 
-> **Status:** Em Produção 🚀
 
 Este projeto é uma aplicação web desenvolvida sob medida para o **Take Away Asfalto 11**. O objetivo principal do sistema é modernizar e agilizar o processo de registro de vendas, garantindo um monitoramento preciso e em tempo real do estoque de produtos alimentícios e bebidas.
 
